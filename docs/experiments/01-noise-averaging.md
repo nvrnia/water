@@ -1,25 +1,24 @@
-# experiment 1: ADC noise and averaging
+# How noisy is the ADC, and does averaging fix it?
 
-**date:** 2026-09-12?
+Experiment 1, 2026-09-12?
 
-**question:** how noisy is a single ADC reading, and does averaging fix it?
+Prediction: The multimeter read 1.09 V on AOUT just before. The ADC should give 1.09 / 3.3 × 4095 ≈ 1353 counts.
 
-**setup:** sensor A in overwatered soil, AOUT on GPIO 32. The meter had read 1.09 V on AOUT just before.
+Setup: Sensor A in the overwatered pot, AOUT on GPIO 32. First single samples 1 s apart. Then one value per second, each the average of 64 samples taken 2 ms apart.
 
-**prediction:** 1.09 / 3.3 × 4095 ≈ 1353 counts.
+Result:
 
-**result:**
-
-| | readings | spread |
+| | Readings | Spread |
 |---|---|---|
-| single samples, 1 s apart | 1292, 1242, 1231, 1218, 1239 | 74 counts ≈ 60 mV |
-| 64-sample average, 1 s apart | 11 readings, 1229–1233 | 4 counts ≈ 3 mV |
+| Single samples | 1292, 1242, 1231, 1218, 1239 | 74 counts, about 60 mV |
+| 64-sample average | 11 values from 1229 to 1233 | 4 counts, about 3 mV |
 
-Mean of the single samples is 1244, which is 1.00 V, about 8% under the meter.
+The single samples averaged 1244, which is 1.00 V. That's about 8% below the multimeter.
 
-**conclusions:**
+Conclusion: My prediction of 1353 was about 8% high.
 
-- averaging 64 samples cut the spread by ~18×. Random noise should drop by √64 = 8×; the five-sample "before" set is too small to read much into the difference
-- averaging fixes random error, not offset. The 8% gap to the meter stayed
-- the offset doesn't matter here: calibration maps ADC counts to ADC counts and never converts to volts
-- 4 counts is ~0.2% of the working range. The 100 nF input capacitor Espressif suggests wasn't fitted
+Averaging cut the spread about 18 times. Random noise should drop by √64 = 8 times, and 5 samples are too few to read much into the gap.
+
+Averaging didn't remove the 8% offset, because that error is systematic. The offset doesn't matter here. Calibration maps ADC counts to ADC counts and never converts to volts.
+
+4 counts is about 0.2% of the working range, so I didn't fit the 100 nF capacitor Espressif suggests.

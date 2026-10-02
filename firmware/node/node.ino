@@ -34,7 +34,7 @@ int readSensor() {
   return total / 64;
 }
 
-// circular buffer: the pointer wraps, the data never moves
+// circular buffer, the write position wraps and overwrites the oldest reading
 void storeReading() {
   readings[nextSlot] = readSensor();
   stamps[nextSlot] = time(nullptr);
@@ -79,8 +79,8 @@ void setup() {
 }
 
 void loop() {
-  // non-blocking timing: check the clock instead of delay(), so the
-  // board can answer web requests between readings
+  // checks the clock instead of using delay(), so the board can still
+  // answer web requests between readings
   if (millis() - lastReading >= INTERVAL) {
     storeReading();
     lastReading = millis();

@@ -1,45 +1,60 @@
-# logbook
+# Logbook
 
-## early Sep — requirements
+## 2026-09 (early)
 
-- 4 plants now, maybe 10 within a year. All in one room, roughly one per corner, ~4 m apart. Mains everywhere, Wi-Fi in the room
-- wanted: reading on my (Android) phone, a notification when a plant is dry, easy to add plants. Tidy and permanent at the end
-- budget about €300. No programming experience at the start
+I set the requirements, picked the architecture and ordered parts.
 
-## early Sep — architecture and parts
+- I have 4 plants now and expect about 10 within a year.
+- They're in one room, about 4 m apart, one per corner.
+- Every plant has mains nearby, and the room has Wi-Fi.
+- I wanted the reading on my Android phone, a notification when a plant is dry, and easy expansion.
+- The budget was about €300. I hadn't programmed before.
+- I went with one Wi-Fi node per cluster of plants instead of one central box. Analog wires stay short, and a new plant means a new node.
+- ADC2 stops working while Wi-Fi is on. Only the ADC1 pins can read sensors, which on this board are GPIO 32 to 36 and 39.
+- Two different boards are sold as "capacitive soil moisture sensor v1.2". The ME555 one only runs on 5 V, so I bought the TL555I version with a regulator.
 
-- one Wi-Fi node per cluster of plants instead of one central box with long sensor cables. Short analog wires, and a new plant is just a new node
-- capacitive sensors, ESP32 DevKit V1, own firmware in C++. Reasons in [decisions.md](decisions.md)
-- found that ADC2 stops working once Wi-Fi is on, so only the ADC1 pins (GPIO 32–36 and 39 on this board) can read sensors
-- two different boards are sold as "capacitive soil moisture sensor v1.2". The ME555 one only runs on 5 V. Bought the TL555I version with a regulator
+Next: measure the sensor output before connecting it to the ESP32.
 
-## 2026-09-12? — first measurements
+## 2026-09-12?
 
-- [experiment 0](experiments/00-sensor-output.md): output is 2.70 V in air and 1.00 V in water. I predicted 0 V in air and higher in water, so the direction was opposite to my guess
-- first attempt read a steady 1.97 V that didn't change in water. The sensor's ground wasn't connected. Found it by measuring between two points that should read 0 V ([problems](problems.md#floating-ground))
-- soil: 2.66 V after 3–4 weeks without water, 1.09 V after overwatering
-- toolchain working: Arduino IDE, COM5, board answers over serial
-- [noise](experiments/01-noise-averaging.md): single ADC samples spread 74 counts; averaging 64 brings it to 4
-- Wi-Fi and a small web server; reading visible on my phone
-- [power supply](experiments/03-power-supply.md) and [temperature](experiments/04-temperature.md) checks: no effect above the noise
+I measured both sensors and got the first readings over Wi-Fi.
 
-## 2026-09-13 to 19 — first drying run
+- The first attempt read a steady 1.97 V in air and in water. The sensor's ground wire wasn't connected ([problems](problems.md)).
+- Sensor output was 2.70 V in air and 1.00 V in water ([experiment 0](experiments/00-sensor-output.md)). My prediction was wrong. I expected 0 V in air and a higher value in water.
+- In the pot, sensor A read 2.66 V after 3 to 4 weeks without water and 1.09 V after overwatering.
+- Single ADC samples spread over 74 counts. Averaging 64 samples brought that down to 4 ([experiment 1](experiments/01-noise-averaging.md)).
+- The node joined Wi-Fi and served the reading to my phone.
+- Swapping laptop USB for a phone charger changed nothing ([experiment 3](experiments/03-power-supply.md)).
+- Opening the window moved the reading 3 to 5 counts ([experiment 4](experiments/04-temperature.md)).
 
-- node logs every 30 min with real timestamps (NTP) into a 3-week buffer
-- [drying curve](experiments/02-soil-drying.md): 1289 → 1535 counts in 6 days, rate slowing from 55 to 24 per day
-- node restarted 6 times; each restart wiped the buffer. Cause unknown
+Next: log a reading every 30 min with real timestamps.
 
-## 2026-09-24 — review
+## 2026-09-13
 
-- sensor A in air through the ADC: 3279. Air and overwatered soil become the calibration anchors
-- watering threshold set to the midpoint, 2239, as a starting guess
-- pot was sitting in a saucer full of water, so it couldn't drain. Explains the slow drying
-- the probe covers most of a 4-inch pot. In a foot-deep pot it would only see the top
-- decided: perfboard, sensors powered from a GPIO only while sampling, KiCad for the schematic
+I started the first drying run, 13 to 19 Sep.
 
-## 2026-10-02 — half-depth probe
+- The node logs every 30 min with NTP timestamps into a 21-day buffer.
+- Over 6 days the reading went from 1289 to 1535 (16% dry). The rate slowed from 55 to 24 counts per day ([experiment 2](experiments/02-soil-drying.md)).
+- The node restarted 6 times, and each restart wiped the buffer. The cause is unknown so far.
 
-- readings came back at ~3170, nearly air. Probe was only half in the soil after the 24 Sep air test ([problems](problems.md#half-depth-probe))
-- data from that period discarded
-- decided: Home Assistant on a Raspberry Pi for history, graphs and notifications. JST-XH plug-in sensors, ESP32 in female headers
-- started this repo
+Next: measure sensor A in air through the ADC.
+
+## 2026-09-24
+
+- Sensor A in air through the ADC read 3279. Air (3279) and overwatered soil (1199) became the calibration anchors.
+- I set the watering threshold to the midpoint, ADC 2239 (50%), as a starting guess.
+- The pot was standing in a saucer full of water, so it couldn't drain. That explains the slow drying.
+- The probe covers most of a 4-inch pot. In a foot-deep pot it would only reach the top.
+- I chose perfboard, GPIO-switched sensor power and KiCad for the schematic.
+
+Next: coat the sensors.
+
+## 2026-10-02
+
+- The reading came back at about 3170, close to the air value. The probe was only half in the soil after the air reading on 24 Sep ([problems](problems.md)).
+- I discarded the readings from that period.
+- I chose Home Assistant on a Raspberry Pi for history, graphs and notifications.
+- Sensors will plug in with JST-XH connectors, and the ESP32 will sit in female headers.
+- I started this repo.
+
+Next: measure sensor B through the ADC before coating it.

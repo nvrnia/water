@@ -1,61 +1,67 @@
-# problems
+# Problems
 
-## floating ground
+## AOUT read 1.97 V in air and in water
 
-**seen:** AOUT read a steady 1.97 V and didn't change when the sensor went into water.
+What happened: The sensor output read a steady 1.97 V. It didn't change when the probe went into water.
 
-**checked, in order:**
+Cause: The sensor's ground wire wasn't joined to the ESP32's ground on the breadboard. With no return path the sensor wasn't running, and AOUT was floating. I found it by measuring points with a known answer, in this order:
 
-| test | expected | got | meaning |
+| Test | Expected | Got | Meaning |
 |---|---|---|---|
-| 3V3 pin to GND | ~3.3 V | 3.4 V | meter and board fine |
-| sensor VCC to GND | ~3.3 V | 3.4 V | VCC wire connected |
-| sensor GND to ESP32 GND | 0.00 V | 2.45 V | **ground not connected** |
+| 3V3 pin to GND | About 3.3 V | 3.4 V | Meter and board fine |
+| Sensor VCC to GND | About 3.3 V | 3.4 V | VCC wire connected |
+| Sensor GND to ESP32 GND | 0.00 V | 2.45 V | Ground not connected |
 
-**cause:** the sensor's ground wire wasn't joined to the ESP32's ground on the breadboard. With no return path the sensor wasn't running, and AOUT was floating.
+Fix: I plugged the sensor straight onto the ESP32's pins, without the breadboard.
 
-**fix:** sensor plugged straight onto the ESP32's pins, no breadboard. Ground check read 0.00 V, then air 2.70 V and water 1.00 V.
+Check: Sensor GND to ESP32 GND read 0.00 V. AOUT then read 2.70 V in air and 1.00 V in water.
 
-**lesson:** test something whose right answer you know for sure. Two points that should be connected must read 0 V.
+## Wi-Fi never connected and gave no error
 
-## Wi-Fi hang with no output
+What happened: The Serial Monitor printed dots forever and never an IP address.
 
-**seen:** dots forever, never an IP.
+Cause: The password in the sketch was empty. The board can't tell a wrong password from any other connection failure.
 
-**cause:** password left empty in the sketch. The board can't tell a wrong password from any other connection failure.
+Fix: I added the password. The sketch now gives up after 20 s and prints the status code. Credentials live in `secrets.h`.
 
-**fix:** password in. The sketch now gives up after 20 s and prints the status code instead of hanging, and credentials live in `secrets.h`.
+Check: The board printed its IP address after a short row of dots.
 
-## stale IP address
+## Browser timed out on the node's address
 
-**seen:** browser timed out; ping said "destination host unreachable".
+What happened: The phone's browser timed out. Ping from the PC returned "destination host unreachable".
 
-**cause:** the board was running an older sketch, and the IP I typed was from a previous boot.
+Cause: The board was running an older sketch, and the address I typed came from an earlier boot.
 
-**fix:** read the current IP from Serial after pressing EN. Still to do: a fixed DHCP lease on the router.
+Fix: I read the current address from the Serial Monitor after pressing EN. A fixed DHCP lease on the router is still to do.
 
-## restarts wipe the history
+Check: The page loaded on the phone and showed a reading of 1199.
 
-**seen:** 6 restarts between 13 and 19 Sep, one more on 2 Oct. Each restart empties the RAM buffer.
+## Restarts wipe the history
 
-**cause:** unknown. Could be power dips, router restarts, or a crash.
+What happened: The node restarted 6 times between 13 and 19 Sep and once on 2 Oct. Each restart empties the RAM buffer.
 
-**next:** log `esp_reset_reason()` at boot and show it on the web page, since no laptop is watching Serial. Long term, Home Assistant stores readings as they arrive, so a restart only loses minutes.
+Cause: Unknown so far. Power dips, router restarts and crashes are all possible, and none is ruled out.
 
-## half-depth probe
+Fix: Not fixed yet. Firmware v2 will record the reset reason at boot and show it on the web page, because no laptop watches Serial. Home Assistant will store readings as they arrive, so a restart only loses minutes.
 
-**seen:** reading jumped to ~3170, close to air (3279). The drying trend predicted ~1800 at most.
+Check: A week with no restarts, or every restart explained by its logged reason.
 
-**cause:** the probe went back in only halfway after being pulled out for an air reading. Half the sensing area was measuring air.
+## Reading jumped to near the air value
 
-**fix:** pushed back to the line, soil pressed around it. Planned: a printed collar that fixes the depth, and a firmware check that flags readings above bone-dry soil as "sensor out of soil?".
+What happened: On 2 Oct the reading sat around 3170, close to air (3279). The drying trend pointed to about 1800 at most.
 
-**lesson:** a placement error looked like a believable dry plant. Nothing flagged it.
+Cause: The probe went back in at half depth after the air reading on 24 Sep. Half the sensing area was in air.
 
-## slow drying
+Fix: I pushed the probe to the line and pressed the soil around it. Planned: a printed collar that sets the depth, and a firmware check that flags any reading above bone-dry soil.
 
-**seen:** 6 days after overwatering, the pot had only dried 16% of the way.
+Check: Pending. The readings after reseating should drop well below 3170.
 
-**cause:** the saucer under the pot held water, and the soil wicked it back up.
+## Pot dried much slower than expected
 
-**fix:** empty the saucer 15–30 min after watering.
+What happened: 6 days after overwatering, the pot was only 16% dry (1289 to 1535).
+
+Cause: The saucer under the pot held water, and the soil soaked it back up.
+
+Fix: I empty the saucer 15 to 30 min after watering.
+
+Check: Not tested yet. The next drying run should be faster.

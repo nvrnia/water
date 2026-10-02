@@ -1,43 +1,30 @@
-# experiment 0: sensor output voltage
+# Is the sensor output safe for an ESP32 pin?
 
-**date:** 2026-09-12?
+Experiment 0, 2026-09-12?
 
-**question:** what voltage does the sensor put out, and is it safe for an ESP32 pin?
+Sources disagreed. Some listed 0 to 3 V out on a 3.3 V supply. Others said the board only works on 5 V and can output up to 5 V. More than about 3.3 V on a GPIO can damage the chip.
 
-**why:** sources disagreed. Some said 0–3 V on 3.3 V supply, some said the board only works on 5 V and can output up to 5 V. More than ~3.3 V into a GPIO risks the chip.
+Prediction: About 0 V in air and a higher value in water. The two sensors won't read the same, because no two units are identical. For the pot after watering, I predicted 1.5 to 2.0 V, because wet soil is a mix of grains, air and water.
 
-**setup:** sensor powered from the ESP32's 3V3 pin (measured 3.4 V). AOUT left unconnected, multimeter on 20 V DC between AOUT and GND. Probe in air, then in water up to the line, then air again.
+Setup: Sensor powered from the ESP32's 3V3 pin, which measured 3.4 V. AOUT not connected to the ESP32. Multimeter on 20 V DC between AOUT and GND. Probe in air, then in water up to the line, then in air again. Then sensor A in a pot, bone dry and after overwatering.
 
-**prediction (mine, written before measuring):**
+Result:
 
-- air: about 0 V
-- water: higher than air
-- the two sensors won't read the same
-
-**result:**
-
-| | sensor A | sensor B |
+| | Sensor A | Sensor B |
 |---|---|---|
-| air | 2.70 V | 2.70 V |
-| water | 1.00 V | 1.00 V |
-| air again | not recorded | 2.70 V |
+| Air | 2.70 V | 2.70 V |
+| Water | 1.00 V | 1.00 V |
+| Air again | Not recorded | 2.70 V |
 
-Soil, sensor A in the pot:
-
-| | |
+| Sensor A in the pot | |
 |---|---|
-| bone dry, 3–4 weeks unwatered | 2.66 V |
-| just overwatered | 1.09 V |
+| Bone dry, 3 to 4 weeks unwatered | 2.66 V |
+| Just overwatered | 1.09 V |
 
-I predicted 1.5–2.0 V for the watered soil, reasoning that soil is a mix of grains, air and water. Overwatering filled the pores, so it read close to pure water.
+Conclusion: The highest output was 2.70 V, below 3.3 V, so the sensor connects to the ESP32 without a divider. The 5 V half of the test wasn't needed.
 
-**conclusions:**
+My prediction was wrong. Wetter soil reads lower. The overwatered pot read 1.09 V, close to pure water, so the soil prediction didn't hold either. Overwatering filled the pores.
 
-- max output 2.70 V, below 3.3 V. No divider needed
-- polarity is inverted: wetter reads lower. Firmware has to flip the mapping
-- the 5 V half of the test wasn't needed
-- bone-dry soil sits within 2% of air, so air works as the dry anchor
-- real soil covers ~92% of the air-to-water range: (2.66 − 1.09) / (2.70 − 1.00)
-- A and B match to the meter's resolution (0.01 V). That only rules out a big difference
+Bone-dry soil sat within 2% of air, so air works as the dry anchor. Real soil covered about 92% of the air-to-water range, from (2.66 − 1.09) / (2.70 − 1.00).
 
-**limits:** one meter, two decimals. Repeatability only recorded for B.
+Sensors A and B matched to the meter's resolution of 0.01 V, which only rules out a large difference. I only recorded the return to air for sensor B.

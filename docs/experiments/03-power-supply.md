@@ -1,15 +1,13 @@
-# experiment 3: laptop USB vs phone charger
+# Does the power source change the reading?
 
-**date:** 2026-09-12?
+Experiment 3, 2026-09-12?
 
-**question:** does swapping the power source change the reading?
+Calibration happens on the laptop, but the node will run on a phone charger.
 
-**why:** the node will run on a charger, but calibration happened on the laptop. The board's regulator should hide the difference; chargers can be noisier.
+Prediction: None written down. The board's regulator should hide the difference, but chargers can be noisier.
 
-**setup:** same sensor, soil and depth. Read AOUT on the laptop, swapped to a phone charger, read again.
+Setup: Same sensor, soil and depth. AOUT read with the multimeter on laptop USB, then on a phone charger.
 
-**result:** 1.07 V on both (multimeter).
+Result: 1.07 V on both.
 
-**conclusion:** no difference the meter can see. Calibration done on the laptop holds on a charger.
-
-**limits:** measured with the meter at 10 mV resolution, not the ADC at 0.8 mV. Repeat with ADC readings if it ever matters.
+Conclusion: The multimeter shows no difference, so calibration done on the laptop holds on the charger. The multimeter resolves 10 mV and the ADC about 0.8 mV, so a smaller difference could still exist.

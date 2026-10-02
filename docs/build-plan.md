@@ -1,15 +1,15 @@
-# build plan, node v1
+# Build plan, node v1
 
 Each step ends with a check that says it's done.
 
-| step | what | done when |
+| Step | What | Done when |
 |---|---|---|
-| P1 | seal both sensors (nail polish on edges, epoxy on the electronics), re-measure anchors | new anchors for A and B, change in range written down |
-| P2 | soldering iron, practice on scrap board | every practice joint passes continuity |
-| P3 | measure sensor current and settling time from a GPIO | both are measured numbers |
-| P4 | schematic in KiCad, check pin current limit in the ESP32 datasheet, perfboard layout on paper | electrical rules check passes |
-| P5 | solder node v1 | readings match the breadboard within 4 counts |
-| P6 | firmware v2: two sensors, switched power, reset reason, range check, MQTT | a week without unexplained restarts |
-| P7 | printed enclosure and depth collar | pulling a lead doesn't load a solder joint |
-| P8 | Raspberry Pi, MQTT broker, Home Assistant, per-plant graphs, notifications | unplugging a node only loses the minutes it was off |
-| P9 | long run: weekly reference readings, finger-check log | three months of drift data per sensor |
+| P1 | Seal both sensors (nail polish on the edges, epoxy on the electronics) and measure the anchors again | New anchors for A and B, change in range written down |
+| P2 | Soldering iron, practice on scrap board | Every practice joint passes continuity |
+| P3 | Measure sensor current and settling time from a GPIO | Both are measured numbers |
+| P4 | Schematic in KiCad, pin current limit from the ESP32 datasheet, perfboard layout on paper | Electrical rules check passes |
+| P5 | Solder node v1 | Readings match the breadboard within 4 counts |
+| P6 | Firmware v2: two sensors, switched power, reset reason, range check, MQTT | A week without unexplained restarts |
+| P7 | Printed enclosure and depth collar | Pulling a lead doesn't load a solder joint |
+| P8 | Raspberry Pi, MQTT broker, Home Assistant, a graph per plant, notifications | Unplugging a node only loses the minutes it was off |
+| P9 | Long run with weekly reference readings and a finger-check log | Three months of drift data per sensor |

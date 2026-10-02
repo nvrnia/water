@@ -1,15 +1,13 @@
-# experiment 4: temperature
+# Does room temperature move the reading?
 
-**date:** 2026-09-12?
+Experiment 4, 2026-09-12?
 
-**question:** does room temperature move the reading?
+Water's dielectric constant and the sensor's timer chip both change with temperature. A pot by a cold window could look like it's drying.
 
-**why:** water's dielectric constant and the sensor's timer chip both change with temperature. A pot by a cold window could look like it's drying.
+Prediction: None written down.
 
-**setup:** sensor in place, window opened and closed, ADC readings compared.
+Setup: Sensor in the pot, window opened and closed, ADC readings compared.
 
-**result:** 3–5 counts difference.
+Result: 3 to 5 counts difference.
 
-**conclusion:** the same size as the noise floor (~4 counts), so no compensation and no temperature sensor.
-
-**limits:** the temperature change wasn't measured. A cold winter night is a bigger swing than an open window in September.
+Conclusion: The effect is the same size as the noise of about 4 counts, so I left out temperature compensation. I didn't measure the temperature change itself. A cold winter night is a bigger swing than an open window in September.
