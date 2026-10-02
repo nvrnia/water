@@ -1,0 +1,11 @@
+sensor,condition,raw_adc,meter_v,date,note
+A,air,3279,,2026-09-24,ADC through firmware v1
+A,air,,2.70,2026-09-12?,Experiment 0; supply 3V3 pin
+A,water to the line,,1.00,2026-09-12?,Experiment 0
+A,bone-dry soil (3-4 weeks unwatered),,2.66,2026-09-12?,in pot
+A,overwatered soil,,1.09,2026-09-12?,in pot; ADC read ~1244 (5 single samples) at about this time
+A,overwatered soil,1199,,2026-09-12?,first web-server reading
+B,air,,2.70,2026-09-12?,Experiment 0; returned to 2.70 after the water test
+B,water to the line,,1.00,2026-09-12?,Experiment 0
+B,air,,,,not yet measured through the ADC
+B,water,,,,not yet measured through the ADC
