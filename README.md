@@ -1,4 +1,4 @@
-# water
+# water sensor
 
 Soil moisture monitoring for houseplants. Each plant gets a capacitive sensor, an ESP32 reads it, and the readings end up on a phone.
 
